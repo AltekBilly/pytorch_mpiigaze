@@ -96,7 +96,7 @@ class Model(nn.Module):
                 torch.zeros(*input_shape)).view(-1).size(0)
 
         self.fc = nn.Linear(self.feature_size + 2, 2)
-
+        # self.fc = nn.Linear(self.feature_size, 2)
         self.apply(initialize_weights)
 
     @staticmethod

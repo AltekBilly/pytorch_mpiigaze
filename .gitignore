@@ -101,3 +101,11 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+# altek
+/experiments
+/billy
+*.mat
+*.pt
+*.png
+parse_h5_file.py

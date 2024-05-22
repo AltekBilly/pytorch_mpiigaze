@@ -1,17 +1,10 @@
-mode: MPIIFaceGaze
+mode: MPIIGaze
 device: cuda
 dataset:
-  dataset_dir: /home/BillyHsueh/dataset/MPIIFaceGaze.h5
-transform:
-  mpiifacegaze_face_size: 224
-  mpiifacegaze_gray: False
+  dataset_dir: /home/BillyHsueh/dataset/MPIIGaze.h5
+  dataset_csv: /data/AIDATA/raw_data/2F-DATASET/Gaze/GazeTrainingData-20240508/training_data.csv
 model:
-  name: resnet_simple
-  backbone:
-    name: resnet_simple
-    pretrained: resnet18
-    resnet_block: basic
-    resnet_layers: [2, 2, 2]
+  name: resnet_preact
 train:
   batch_size: 32
   optimizer: sgd
@@ -20,13 +13,13 @@ train:
   nesterov: True
   weight_decay: 0.0001
   no_weight_decay_on_bn: False
-  loss: L1
+  loss: L2
   seed: 0
-  test_id: 0
+  test_id: -1
   val_ratio: 0.1
-  output_dir: /home/BillyHsueh/repo/pytorch_mpiigaze/experiments/mpiifacegaze/resnet_simple_14/exp00
+  output_dir: /home/BillyHsueh/repo/pytorch_mpiigaze/experiments/mpiigaze/resnet_preact/altek_20240514
   log_period: 100
-  checkpoint_period: 5
+  checkpoint_period: 1
   use_tensorboard: True
   train_dataloader:
     num_workers: 4
@@ -36,9 +29,9 @@ train:
     num_workers: 4
     pin_memory: False
 scheduler:
-  epochs: 15
+  epochs: 300
   type: multistep
-  milestones: [10, 13]
+  milestones: [30, 35]
   lr_decay: 0.1
   lr_min_factor: 0.001
 cudnn:

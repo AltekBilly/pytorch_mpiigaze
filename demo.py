@@ -101,7 +101,10 @@ class Demo:
             return None
         ext = self.config.demo.output_file_extension
         if ext == 'mp4':
-            fourcc = cv2.VideoWriter_fourcc(*'H264')
+            # (-/+) -> modify by billy
+            # fourcc = cv2.VideoWriter_fourcc(*'H264')
+            fourcc = cv2.VideoWriter_fourcc('m','p','4','v')
+            # <- (-/+) modify by billy
         elif ext == 'avi':
             fourcc = cv2.VideoWriter_fourcc(*'PIM1')
         else:

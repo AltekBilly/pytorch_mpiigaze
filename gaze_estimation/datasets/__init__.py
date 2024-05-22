@@ -18,6 +18,9 @@ def create_dataset(config: yacs.config.CfgNode,
     else:
         raise ValueError
 
+    if config.dataset.dataset_csv is not None:
+        from .altekgaze import AltekDataset
+    
     dataset_dir = pathlib.Path(config.dataset.dataset_dir)
 
     assert dataset_dir.exists()
@@ -26,9 +29,16 @@ def create_dataset(config: yacs.config.CfgNode,
     person_ids = [f'p{index:02}' for index in range(15)]
 
     transform = create_transform(config)
-
+    
     if is_train:
-        if config.train.test_id == -1:
+        # (+) -> add by billy
+        if config.dataset.dataset_csv is not None:        
+            train_dataset = AltekDataset(config.dataset.dataset_csv, transform)
+        # <- (+) add by billy
+        # (+/-) -> modify by billy
+        elif config.train.test_id == -1:
+        #//if config.train.test_id == -1:
+        # <- (+/-) modify by billy
             train_dataset = torch.utils.data.ConcatDataset([
                 OnePersonDataset(person_id, dataset_dir, transform)
                 for person_id in person_ids
@@ -49,7 +59,12 @@ def create_dataset(config: yacs.config.CfgNode,
         lengths = [train_num, val_num]
         return torch.utils.data.dataset.random_split(train_dataset, lengths)
     else:
-        test_person_id = person_ids[config.test.test_id]
-        test_dataset = OnePersonDataset(test_person_id, dataset_dir, transform)
-        assert len(test_dataset) == 3000
+        # (+) - > add by billy
+        if config.dataset.dataset_csv is not None:
+            test_dataset = AltekDataset(config.dataset.dataset_csv, transform)
+        else:
+        # <- (+) add by billy
+            test_person_id = person_ids[config.test.test_id]
+            test_dataset = OnePersonDataset(test_person_id, dataset_dir, transform)
+            assert len(test_dataset) == 3000
         return test_dataset

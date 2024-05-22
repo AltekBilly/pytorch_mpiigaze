@@ -1,0 +1,18 @@
+mode: MPIIGaze
+device: cuda
+dataset:
+  dataset_dir: /home/BillyHsueh/dataset/MPIIGaze.h5
+  dataset_csv: /data/AIDATA/raw_data/2F-DATASET/Gaze/GazeTrainingData-20240508/training_data_20240508.csv
+model:
+  name: resnet_preact
+test:
+  test_id: 0
+  checkpoint: /home/BillyHsueh/repo/pytorch_mpiigaze/experiments/mpiigaze/resnet_preact/altek_20240509_no_head_pose/all/checkpoint_0040.pth
+  output_dir: /home/BillyHsueh/repo/pytorch_mpiigaze/experiments/mpiigaze/resnet_preact/altek_20240509_no_head_pose/eval
+  batch_size: 256
+  dataloader:
+    num_workers: 4
+    pin_memory: False
+cudnn:
+  benchmark: True
+  deterministic: False

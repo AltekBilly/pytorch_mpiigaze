@@ -22,11 +22,37 @@ def setup_cudnn(config) -> None:
     torch.backends.cudnn.deterministic = config.cudnn.deterministic
 
 
+# (+) -> add by billy
+def load_config_(set_config: str = None) -> yacs.config.CfgNode:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=str)
+    parser.add_argument('options', default=None, nargs=argparse.REMAINDER)
+    args = parser.parse_args()
+    if args.config is None:
+        args.config = set_config
+
+    config = get_default_config()
+    config.dataset.dataset_csv = None # add new param
+    if args.config is not None:
+        config.merge_from_file(args.config)
+    config.merge_from_list(args.options)
+    if not torch.cuda.is_available():
+        config.device = 'cpu'
+        config.train.train_dataloader.pin_memory = False
+        config.train.val_dataloader.pin_memory = False
+        config.test.dataloader.pin_memory = False
+    config.freeze()
+    return config
+# <- (+) add by billy
+
 def load_config() -> yacs.config.CfgNode:
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str)
     parser.add_argument('options', default=None, nargs=argparse.REMAINDER)
     args = parser.parse_args()
+    # (+) -> add by billy
+    args.config = 'configs/demo_mpiifacegaze_resnet_simple_14.yaml'
+    # <- (+) add by billy
 
     config = get_default_config()
     if args.config is not None:

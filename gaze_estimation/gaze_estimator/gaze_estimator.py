@@ -29,6 +29,10 @@ class GazeEstimator:
             self.camera, self._normalized_camera,
             self._config.gaze_estimator.normalized_camera_distance)
         self._gaze_estimation_model = self._load_model()
+
+        # m = torch.jit.script(self._gaze_estimation_model)
+        # m.save("torch_script.pt")
+
         self._transform = create_transform(config)
 
     def _load_model(self) -> torch.nn.Module:
